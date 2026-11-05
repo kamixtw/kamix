@@ -1,0 +1,25 @@
+{
+  "name": "@kamixtw/kamix",
+  "version": "3.0.0",
+  "description": "An API-driven OS framework for PenguinMod. A Triflare project.",
+  "homepage": "https://github.com/kamixtw/kamix#readme",
+  "bugs": {
+    "url": "https://github.com/kamixtw/kamix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamixtw/kamix.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Kamix",
+  "type": "module",
+  "main": "src/SystemInit/main.tfx",
+  "scripts": {
+    "build": "fx build",
+    "check": "fx check",
+    "dev": "fx dev"
+  },
+  "devDependencies": {
+    "@triflare/fx": "^1.0.3"
+  }
+}

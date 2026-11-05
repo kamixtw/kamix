@@ -1,0 +1,38 @@
+// MemoryAPI — A speedy volatile memory API
+//
+// [API]
+// MemoryAPI.create (action): { key }
+
+sprite "MemoryAPI" {
+  costumes: {
+    icon: "../../assets/MemoryAPI.svg"
+  };
+
+  let memory = "[]";
+  let memoryOld = "[]";
+  list locks = [];
+
+  when greenFlag {
+    signals.registerErrorType("MemoryAPIError");
+  }
+
+  when signals.whenActionReceived("MemoryAPI.create") {
+    // Check if the request is valid
+    if (!json.hasKey("key", signals.getSignalData())) {
+      signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
+    }
+
+    // Check if the item is locked
+    if (locks.contains(json.get("key", signals.getSignalData()))) {
+      control.waitUntil(!locks.contains(json.get("key", signals.getSignalData())));
+    }
+
+    locks.push(json.get("key", signals.getSignalData()));
+
+    memoryOld = memory;
+    memory = json.arrayPush(operators.join(operators.join('{"', json.get("key", signals.getSignalData())), '": "_empty"}' ), memoryOld);
+    memoryOld = "[]";
+    
+    locks.deleteAt(locks.itemNumber(json.get("key", signals.getSignalData())));
+  }
+}

@@ -1,0 +1,17 @@
+project:
+  name: "Kamix v3.0.0"
+  fps: 60
+  width: 480
+  height: 360
+  turbo: false
+  interpolation: true
+  extensions:
+    - "vendor/signals.js"
+    - "vendor/xterm.js"
+    - "vendor/json.js"
+
+fx:
+  partialSprites: true
+
+package:
+  target: html
