@@ -5,13 +5,22 @@ project:
   height: 360
   turbo: false
   interpolation: true
-  extensions:
-    - "vendor/signals.js"
-    - "vendor/xterm.js"
-    - "vendor/json.js"
 
 fx:
   partialSprites: true
+  tests: true
 
 package:
   target: html
+
+vendor:
+  signals:
+    url: "vendor/signals.js"
+    unsandboxed: true
+  xterm:
+    url: "vendor/xterm.js"
+    unsandboxed: true
+  json: "vendor/json.js"
+
+features:
+  temporaryvariables: "./extensions/fx-tempvars.js"

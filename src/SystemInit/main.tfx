@@ -3,22 +3,22 @@
 // THe API for managing SystemInit is SystemInitAPI.
 
 sprite "SystemInit" {
-  costumes: {
-    icon: "../../assets/SystemInit.svg"
-  };
+    costumes: {
+        icon: "../../assets/SystemInit.svg"
+    };
 
-  when greenFlag {
-    looks.hide();
-    signals.emitEvent("SystemInit._powerOn");
-  }
-
-  when signals.whenEventEmitted("SystemInit._powerOn") {
-    xterm.initializeTerminal();
-    xterm.showTerminal();
-    xterm.logMessage("info", "SystemInit", "Terminal is ready!");
-    signals.fireAction("MemoryAPI.create", '{"key": "hi"}');
-    if (signals.didErrorOccur() == true) {
-      xterm.logMessage("error", "SystemInit", operators.join(signals.lastErrorType(), signals.lastErrorMessage()));
+    when greenFlag {
+        looks.hide();
+        signals.emitEvent("SystemInit._powerOn");
     }
-  }
+
+    when signals.whenEventEmitted("SystemInit._powerOn") {
+        xterm.initializeTerminal();
+        xterm.showTerminal();
+        xterm.logMessage("info", "SystemInit", "Terminal is ready!");
+        signals.fireAction("MemoryAPI.create", "{\"key\": \"hi\"}");
+        if (signals.didErrorOccur() == true) {
+            xterm.logMessage("error", "SystemInit", operators.join(signals.lastErrorType(), signals.lastErrorMessage()));
+        }
+    }
 }

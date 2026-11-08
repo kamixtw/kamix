@@ -1,0 +1,8 @@
+test "Creating a key writes it to memory" {
+    start();
+
+    MemoryAPI.create("testKey");
+    step(10);
+        
+    expect state.variable("memory") == ('[{"testKey":"_empty"}]');
+}

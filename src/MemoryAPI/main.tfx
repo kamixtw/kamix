@@ -4,35 +4,44 @@
 // MemoryAPI.create (action): { key }
 
 sprite "MemoryAPI" {
-  costumes: {
-    icon: "../../assets/MemoryAPI.svg"
-  };
+    costumes: {
+        icon: "../../assets/MemoryAPI.svg"
+    };
 
-  let memory = "[]";
-  let memoryOld = "[]";
-  list locks = [];
+    let memory = "[]";
+    list locks = [];
 
-  when greenFlag {
-    signals.registerErrorType("MemoryAPIError");
-  }
-
-  when signals.whenActionReceived("MemoryAPI.create") {
-    // Check if the request is valid
-    if (!json.hasKey("key", signals.getSignalData())) {
-      signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
+    when greenFlag {
+        signals.registerErrorType("MemoryAPIError");
+        looks.hide();
     }
 
-    // Check if the item is locked
-    if (locks.contains(json.get("key", signals.getSignalData()))) {
-      control.waitUntil(!locks.contains(json.get("key", signals.getSignalData())));
+    when signals.whenActionReceived("MemoryAPI.create") {
+        thread let memoryOld = "[]";
+        thread let req = signals.getSignalData();
+
+        // Check if the request is valid
+        if (not json.hasKey("key", $req)) {
+            signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
+        }
+
+        // Check if the item is locked
+        if (locks.contains(json.get("key", $req))) {
+            control.waitUntil(not locks.contains(json.get("key", $req)));
+        }
+
+        thread let key = json.get("key", $req);
+
+        locks.push($key);
+
+        $memoryOld = memory;
+        memory = json.arrayPush(operators.join(operators.join("{\"", $key), "\": \"_empty\"}"), $memoryOld);
+        $memoryOld = "[]";
+
+        locks.deleteAt(locks.itemNumber($key));
     }
 
-    locks.push(json.get("key", signals.getSignalData()));
-
-    memoryOld = memory;
-    memory = json.arrayPush(operators.join(operators.join('{"', json.get("key", signals.getSignalData())), '": "_empty"}' ), memoryOld);
-    memoryOld = "[]";
-    
-    locks.deleteAt(locks.itemNumber(json.get("key", signals.getSignalData())));
-  }
+    function create(key) {
+        signals.fireAction("MemoryAPI.create", operators.join("{\"key\": \"", operators.join(key, "\"}")));
+    }
 }

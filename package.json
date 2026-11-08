@@ -20,6 +20,6 @@
     "dev": "fx dev"
   },
   "devDependencies": {
-    "@triflare/fx": "^1.0.3"
+    "@triflare/fx": "^2.1.0-beta.3"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "extensions": {
+    "signals": {
+      "name": "signals",
+      "source": "vendor/signals.js",
+      "file": "extensions/signals.js",
+      "sha256": "98c710aaeac56933212177cb6657ef57a83593ac40907b3d6aab741bc3afb692",
+      "fetched": "2026-11-08T02:35:20.804Z",
+      "remote": false,
+      "local": true,
+      "volatile": false
+    },
+    "xterm": {
+      "name": "xterm",
+      "source": "vendor/xterm.js",
+      "file": "extensions/xterm.js",
+      "sha256": "1372bc965bc879f16553602150292adbe054904cb9173f3290d6a465abd5ae60",
+      "fetched": "2026-11-08T02:35:20.808Z",
+      "remote": false,
+      "local": true,
+      "volatile": false
+    },
+    "json": {
+      "name": "json",
+      "source": "vendor/json.js",
+      "file": "extensions/json.js",
+      "sha256": "a259ee117ca2363bc3a932fd576fd3c810ed98736472a51172640242b085124b",
+      "fetched": "2026-11-08T02:35:20.808Z",
+      "remote": false,
+      "local": true,
+      "volatile": false
+    }
+  }
+}
