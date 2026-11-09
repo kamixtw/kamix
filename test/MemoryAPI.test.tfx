@@ -6,3 +6,15 @@ test "Creating a key writes it to memory" {
         
     expect state.variable("memory") == ('[{"testKey":"_empty"}]');
 }
+
+test "Writing a value to a key updates the memory" {
+    start();
+
+    MemoryAPI.create("testKey");
+    step(10);
+
+    MemoryAPI.write("testKey", "testValue");
+    step(10);
+        
+    expect state.variable("memory") == ('[{"testKey":"testValue"}]');
+}

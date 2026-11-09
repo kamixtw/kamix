@@ -15,12 +15,12 @@ package:
 
 vendor:
   signals:
-    url: "vendor/signals.js"
+    url: "https://marketplace.sdisk.us/api/v1/@kmboswell/signals/versions/1.0.1/download"
     unsandboxed: true
   xterm:
-    url: "vendor/xterm.js"
+    url: "https://marketplace.sdisk.us/api/v1/@kmboswell/xterm/versions/1.0.0/download"
     unsandboxed: true
-  json: "vendor/json.js"
+  json: "https://marketplace.sdisk.us/api/v1/@kamix/json/versions/0.1.0/download"
 
 features:
   temporaryvariables: "./extensions/fx-tempvars.js"

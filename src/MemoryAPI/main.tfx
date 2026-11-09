@@ -12,36 +12,161 @@ sprite "MemoryAPI" {
     list locks = [];
 
     when greenFlag {
-        signals.registerErrorType("MemoryAPIError");
         looks.hide();
     }
 
+    when signals.whenActionReceived("MemoryAPI.init") {
+        xterm.logMessage("debug", "MemoryAPI", "Registering error type `MemoryAPIError`.");
+        signals.registerErrorType("MemoryAPIError");
+        xterm.logMessage("info", "MemoryAPI", "MemoryAPI is ready.");
+    }
+
     when signals.whenActionReceived("MemoryAPI.create") {
-        thread let memoryOld = "[]";
+        thread let memoryOld = memory;
         thread let req = signals.getSignalData();
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("create: received request ", $req));
 
         // Check if the request is valid
         if (not json.hasKey("key", $req)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("create: rejected malformed request ", $req));
             signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
         }
 
-        // Check if the item is locked
-        if (locks.contains(json.get("key", $req))) {
-            control.waitUntil(not locks.contains(json.get("key", $req)));
+        thread let item = "";
+        thread let int = 1;
+
+        repeat (json.jsonLength($memoryOld)) { /* Very confusing call for arrays, jsonLength counts array length */
+            $item = json.arrayGet($int, $memoryOld);
+
+            if (json.hasKey(json.get("key", $item), $req)) {
+                xterm.logMessage("error", "MemoryAPI", operators.join("create: key already exists: ", json.get("key", $req)));
+                signals.raiseError("MemoryAPIError", operators.join(operators.join("Item with key `", json.get("key", $req)), "` already exists!"));
+            }
+
+            $int += 1;
         }
 
         thread let key = json.get("key", $req);
 
+        xterm.logMessage("debug", "MemoryAPI", operators.join("create: creating key ", $key));
+
+        // Check if the item is locked
+        if (locks.contains($key)) {
+            xterm.logMessage("debug", "MemoryAPI", operators.join("create: waiting for lock on key ", $key));
+            control.waitUntil(not locks.contains($key));
+        }
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("create: acquired lock on key ", $key));
         locks.push($key);
 
-        $memoryOld = memory;
         memory = json.arrayPush(operators.join(operators.join("{\"", $key), "\": \"_empty\"}"), $memoryOld);
         $memoryOld = "[]";
 
         locks.deleteAt(locks.itemNumber($key));
+        xterm.logMessage("trace", "MemoryAPI", operators.join("create: released lock on key ", $key));
     }
 
-    function create(key) {
-        signals.fireAction("MemoryAPI.create", operators.join("{\"key\": \"", operators.join(key, "\"}")));
+    when signals.whenActionReceived("MemoryAPI.write") {
+        thread let memoryOld = memory;
+        thread let req = signals.getSignalData();
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("write: received request ", $req));
+
+        // Check if the request is valid
+        if (not json.hasKey("key", $req)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("write: rejected malformed request ", $req));
+            signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
+        }
+
+        if (not json.hasKey("value", $req)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("write: rejected malformed request ", $req));
+            signals.raiseError("MemoryAPIError", "Malformed request: You need `value`!");
+        }
+
+        thread let key = json.get("key", $req);
+        thread let item = "";
+        thread let int = 1;
+
+        repeat (json.jsonLength($memoryOld)) { /* Very confusing call for arrays, jsonLength counts array length */
+            $item = json.arrayGet($int, $memoryOld);
+
+            if (json.hasKey($key, $item)) {
+                control.escapeLoop();
+            }
+
+            $int += 1;
+        }
+
+        if (not json.hasKey($key, $item)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("write: key does not exist: ", $key));
+            signals.raiseError("MemoryAPIError", operators.join(operators.join("Item with key `", json.get("key", $req)), "` does not exist!"));
+        }
+
+        thread let value = json.get("value", $req);
+
+        xterm.logMessage("debug", "MemoryAPI", operators.join("write: writing value to key ", $key));
+
+        // Check if the item is locked
+        if (locks.contains($key)) {
+            xterm.logMessage("debug", "MemoryAPI", operators.join("write: waiting for lock on key ", $key));
+            control.waitUntil(not locks.contains($key));
+        }
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("write: acquired lock on key ", $key));
+        locks.push($key);
+
+        memory = json.arraySet(operators.join(operators.join(operators.join(operators.join("{\"", $key), "\": \""), $value), "\"}"), $int, $memoryOld);
+        $memoryOld = "[]";
+
+        locks.deleteAt(locks.itemNumber($key));
+        xterm.logMessage("trace", "MemoryAPI", operators.join("write: released lock on key ", $key));
+    }
+
+    when signals.whenQueryReceived("MemoryAPI.read") {
+        thread let memoryOld = memory;
+        thread let req = signals.getSignalData();
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("read: received request ", $req));
+
+        // Check if the request is valid
+        if (not json.hasKey("key", $req)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("read: rejected malformed request ", $req));
+            signals.raiseError("MemoryAPIError", "Malformed request: You need `key`!");
+        }
+
+        thread let item = "";
+        thread let int = 1;
+
+        repeat (json.jsonLength($memoryOld)) { /* Very confusing call for arrays, jsonLength counts array length */
+            $item = json.arrayGet($int, $memoryOld);
+
+            if (json.hasKey(json.get("key", $item), $req)) {
+                control.escapeLoop();
+            }
+
+            $int += 1;
+        }
+
+        if (!json.hasKey(json.get("key", $item), $req)) {
+            xterm.logMessage("error", "MemoryAPI", operators.join("read: key doesn't exist: ", json.get("key", $req)));
+            signals.raiseError("MemoryAPIError", operators.join(operators.join("Item with key `", json.get("key", $req)), "` doesn't exist!"));
+        }
+
+        thread let key = json.get("key", $req);
+
+        xterm.logMessage("debug", "MemoryAPI", operators.join("read: reading key ", $key));
+
+        // Check if the item is locked
+        if (locks.contains($key)) {
+            xterm.logMessage("debug", "MemoryAPI", operators.join("read: waiting for lock on key ", $key));
+            control.waitUntil(not locks.contains($key));
+        }
+
+        memory = json.arrayPush(operators.join(operators.join("{\"", $key), "\": \"_empty\"}"), $memoryOld);
+
+        xterm.logMessage("trace", "MemoryAPI", operators.join("read: read key ", $key));
+
+        signals.returnValue(operators.join(operators.join("{\"", $key), "\": \""), json.get($key, $item), "\"}");
     }
 }

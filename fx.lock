@@ -3,33 +3,39 @@
   "extensions": {
     "signals": {
       "name": "signals",
-      "source": "vendor/signals.js",
+      "source": "https://marketplace.sdisk.us/api/v1/@kmboswell/signals/versions/1.0.1/download",
       "file": "extensions/signals.js",
-      "sha256": "98c710aaeac56933212177cb6657ef57a83593ac40907b3d6aab741bc3afb692",
-      "fetched": "2026-11-08T02:35:20.804Z",
-      "remote": false,
-      "local": true,
-      "volatile": false
+      "sha256": "da75d60b284eda38b6c9daef1b636e1a21c64ccb207e7ed7e436d8f0da1ba18c",
+      "fetched": "2026-11-09T00:50:19.103Z",
+      "remote": true,
+      "local": false,
+      "volatile": false,
+      "etag": "W/\"2adb-1a1bd3aa01e\"",
+      "lastModified": "Sun, 08 Nov 2026 22:14:58 GMT"
     },
     "xterm": {
       "name": "xterm",
-      "source": "vendor/xterm.js",
+      "source": "https://marketplace.sdisk.us/api/v1/@kmboswell/xterm/versions/1.0.0/download",
       "file": "extensions/xterm.js",
-      "sha256": "1372bc965bc879f16553602150292adbe054904cb9173f3290d6a465abd5ae60",
-      "fetched": "2026-11-08T02:35:20.808Z",
-      "remote": false,
-      "local": true,
-      "volatile": false
+      "sha256": "7266c1e02aaced801159dfb258b43e8a113dc8cfe2f914a3d7cd31f01a698c34",
+      "fetched": "2026-11-09T00:50:19.110Z",
+      "remote": true,
+      "local": false,
+      "volatile": false,
+      "etag": "W/\"4540-1a1bd3b38e4\"",
+      "lastModified": "Sun, 08 Nov 2026 22:15:37 GMT"
     },
     "json": {
       "name": "json",
-      "source": "vendor/json.js",
+      "source": "https://marketplace.sdisk.us/api/v1/@kamix/json/versions/0.1.0/download",
       "file": "extensions/json.js",
-      "sha256": "a259ee117ca2363bc3a932fd576fd3c810ed98736472a51172640242b085124b",
-      "fetched": "2026-11-08T02:35:20.808Z",
-      "remote": false,
-      "local": true,
-      "volatile": false
+      "sha256": "3e8dfe8ee74112ee9bb79450cd7d1c954a19f9c81c7f12bd6466a41ec8f7943d",
+      "fetched": "2026-11-09T03:14:27.912Z",
+      "remote": true,
+      "local": false,
+      "volatile": false,
+      "etag": "W/\"3670-1a1be43f212\"",
+      "lastModified": "Mon, 09 Nov 2026 03:04:46 GMT"
     }
   }
 }

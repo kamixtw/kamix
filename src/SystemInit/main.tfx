@@ -16,9 +16,18 @@ sprite "SystemInit" {
         xterm.initializeTerminal();
         xterm.showTerminal();
         xterm.logMessage("info", "SystemInit", "Terminal is ready!");
+
+        // Test MemoryAPI.create
+        // Won't actually exist in the real system, but this is just for testing.
         signals.fireAction("MemoryAPI.create", "{\"key\": \"hi\"}");
+
         if (signals.didErrorOccur() == true) {
             xterm.logMessage("error", "SystemInit", operators.join(signals.lastErrorType(), signals.lastErrorMessage()));
+        } else {
+            xterm.logMessage("success", "SystemInit", "MemoryAPI.create succeeded!");
         }
+
+        signals.fireAction("MemoryAPI.create", "{\"key\": \"hi2\"}");
+        signals.fireAction("MemoryAPI.write", "{\"key\": \"hi2\", \"value\": \"Hello, World!\"}");
     }
 }
