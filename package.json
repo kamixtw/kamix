@@ -17,7 +17,8 @@
   "scripts": {
     "build": "fx build",
     "check": "fx check",
-    "dev": "fx dev"
+    "dev": "fx dev",
+    "test": "fx test --allow-project-extensions"
   },
   "devDependencies": {
     "@triflare/fx": "^2.1.0-beta.3"

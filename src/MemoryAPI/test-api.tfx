@@ -10,4 +10,8 @@ partial sprite "MemoryAPI" {
     function write(key, value) {
         signals.fireAction("MemoryAPI.write", operators.join("{\"key\": \"", operators.join(key, operators.join("\", \"value\": \"", operators.join(value, "\"}")))));
     }
+
+    returning function read(key) {
+        return signals.fireAction("MemoryAPI.read", operators.join("{\"key\": \"", operators.join(key, "\"}")));
+    }
 }
