@@ -1,17 +1,15 @@
-// Defines some test-only API calls for MemoryAPI, shouldn't be used in production as these
-// aren't defended by semver
+// Test-only helpers for MemoryAPI. Not covered by semver.
 
 partial sprite "MemoryAPI" {
-    // Internal function
     function create(key) {
-        signals.fireAction("MemoryAPI.create", operators.join("{\"key\": \"", operators.join(key, "\"}")));
+        signals.fireAction("MemoryAPI.create", json.set("key", key, "{}"));
     }
 
     function write(key, value) {
-        signals.fireAction("MemoryAPI.write", operators.join("{\"key\": \"", operators.join(key, operators.join("\", \"value\": \"", operators.join(value, "\"}")))));
+        signals.fireAction("MemoryAPI.write", json.set("value", value, json.set("key", key, "{}")));
     }
 
     returning function read(key) {
-        return signals.fireAction("MemoryAPI.read", operators.join("{\"key\": \"", operators.join(key, "\"}")));
+        return signals.querySignal("MemoryAPI.read", json.set("key", key, "{}"));
     }
 }

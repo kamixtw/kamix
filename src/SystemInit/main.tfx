@@ -1,7 +1,9 @@
-// SystemInit — The boot loader and first process of Kamix.
+// SystemInit (no API) — The boot loader and first process of Kamix 3+.
 //
-// THe API for managing SystemInit is SystemInitAPI.
-
+// [API]
+// SystemInit._powerOn (event): Fired once on green flag; starts the boot sequence.
+//
+// The API for managing SystemInit is SystemInitAPI.
 sprite "SystemInit" {
     costumes: {
         icon: "../../assets/SystemInit.svg"
@@ -17,17 +19,18 @@ sprite "SystemInit" {
         xterm.showTerminal();
         xterm.logMessage("info", "SystemInit", "Terminal is ready!");
 
-        // Test MemoryAPI.create
-        // Won't actually exist in the real system, but this is just for testing.
-        signals.fireAction("MemoryAPI.create", "{\"key\": \"hi\"}");
+        // Smoke test for MemoryAPI. Won't exist in the real system.
+        // fireAction only reports dispatch problems (e.g. no handler); errors raised
+        // inside the handler are not visible here, so verify with a query instead.
+        signals.fireAction("MemoryAPI.create", json.set("key", "hi", "{}"));
+        signals.fireAction("MemoryAPI.write", json.set("value", "Hello, World!", json.set("key", "hi", "{}")));
 
-        if (signals.didErrorOccur() == true) {
-            xterm.logMessage("error", "SystemInit", operators.join(signals.lastErrorType(), signals.lastErrorMessage()));
+        thread let result = signals.querySignal("MemoryAPI.read", json.set("key", "hi", "{}"));
+
+        if (signals.didErrorOccur()) {
+            xterm.logMessage("error", "SystemInit", operators.join(operators.join(signals.lastErrorType(), ": "), signals.lastErrorMessage()));
         } else {
-            xterm.logMessage("success", "SystemInit", "MemoryAPI.create succeeded!");
+            xterm.logMessage("success", "SystemInit", operators.join("MemoryAPI smoke test read back ", $result));
         }
-
-        signals.fireAction("MemoryAPI.create", "{\"key\": \"hi2\"}");
-        signals.fireAction("MemoryAPI.write", "{\"key\": \"hi2\", \"value\": \"Hello, World!\"}");
     }
 }

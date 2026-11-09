@@ -3,8 +3,8 @@ test "Creating a key writes it to memory" {
 
     MemoryAPI.create("testKey");
     step(10);
-        
-    expect state.variable("memory") == ('[{"testKey":"_empty"}]');
+
+    expect state.variable("memory") == ('{"testKey":"_empty"}');
 }
 
 test "Writing a value to a key updates the memory" {
@@ -15,6 +15,40 @@ test "Writing a value to a key updates the memory" {
 
     MemoryAPI.write("testKey", "testValue");
     step(10);
-        
-    expect state.variable("memory") == ('[{"testKey":"testValue"}]');
+
+    expect state.variable("memory") == ('{"testKey":"testValue"}');
+}
+
+test "Creating an existing key does not overwrite it" {
+    start();
+
+    MemoryAPI.create("testKey");
+    step(10);
+    MemoryAPI.write("testKey", "testValue");
+    step(10);
+
+    MemoryAPI.create("testKey");
+    step(10);
+
+    expect state.variable("memory") == ('{"testKey":"testValue"}');
+}
+
+test "Writing to a missing key leaves memory untouched" {
+    start();
+
+    MemoryAPI.write("nope", "x");
+    step(10);
+
+    expect state.variable("memory") == ('{}');
+}
+
+test "Values with quotes are stored intact" {
+    start();
+
+    MemoryAPI.create("q");
+    step(10);
+    MemoryAPI.write("q", "say \"hi\"");
+    step(10);
+
+    expect state.variable("memory") == ('{"q":"say \\"hi\\""}');
 }
