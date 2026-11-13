@@ -15,15 +15,15 @@
     },
     "xterm": {
       "name": "xterm",
-      "source": "https://marketplace.sdisk.us/api/v1/@kmboswell/xterm/versions/1.0.0/download",
+      "source": "https://marketplace.sdisk.us/api/v1/@kmboswell/xterm/versions/1.1.0/download",
       "file": "extensions/xterm.js",
-      "sha256": "7266c1e02aaced801159dfb258b43e8a113dc8cfe2f914a3d7cd31f01a698c34",
-      "fetched": "2026-11-09T00:50:19.110Z",
+      "sha256": "bddae9091907a140e3123a276e093a927e58bca9a29788fc7967a42629961c49",
+      "fetched": "2026-11-13T05:06:54.983Z",
       "remote": true,
       "local": false,
       "volatile": false,
-      "etag": "W/\"4540-1a1bd3b38e4\"",
-      "lastModified": "Sun, 08 Nov 2026 22:15:37 GMT"
+      "etag": "W/\"7f96f-1a1d34b365c\"",
+      "lastModified": "Fri, 13 Nov 2026 05:04:44 GMT"
     },
     "json": {
       "name": "json",
